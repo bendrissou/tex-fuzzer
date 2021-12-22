@@ -8,7 +8,6 @@ drun:
 	env LC_ALL=C python3 -m pudb main.py $(V)
 
 clean:
-	find . -name __pycache__ -type d -print0 -prune | xargs -0 -- rm -r
 	rm -rf examples/results_*.json
 	echo '' > valid_inputs.txt
 
