@@ -4,15 +4,15 @@ The source code project is [bFuzzer](https://github.com/vrthra/bFuzzer).
 
 The fuzzer produces random, but syntactically-valid Tex inputs. 
 
-First, make sure you have texlive installed in your linux machine. The wrapper that maps TeX error messages to the appropriate exit codes in implemented in `simplechains\tex\tex_fuzzer.py`
+First, make sure you have *texlive* installed in your linux machine. The wrapper that maps TeX error messages to the appropriate exit codes in implemented in `simplechains\tex\tex_fuzzer.py`
 
 To remove results of previous runs, run:
 
-  make clean
+	make clean
 
 To run the fuzzer, execute:
 
-  make fuzz_tex
+	make fuzz_tex
 
 The default run time is 3600 seconds (1 hour). You can modify the run time and other configuations from `stateless\config.py`
 
