@@ -8,11 +8,11 @@ First, make sure you have texlive installed in your linux machine. The wrapper t
 
 To remove results of previous runs, run:
 
-  make clean
+	make clean
 
 To run the fuzzer, execute:
 
-  make fuzz_tex
+	make fuzz_tex
 
 The default run time is 3600 seconds (1 hour). You can modify the run time and other configuations from `stateless\config.py`
 
