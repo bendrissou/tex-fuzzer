@@ -82,7 +82,7 @@ def generate(validator, prev_bytes=None, limit=0):
     iter_limit = CONFIG.ITERATION_LIMIT
     while iter_limit:
         if len(prev_bytes) > CONFIG.MAX_INPUT_LEN:
-            raise InputLimitException('Exhausted %d bytes' % CONFIG.MAX_INPUT_LEN)
+            raise InputLimitException('Exceeded %d bytes' % CONFIG.MAX_INPUT_LEN)
         iter_limit -= 1
         choices = [i for i in all_choices if i not in seen]
         if not choices:
@@ -92,15 +92,13 @@ def generate(validator, prev_bytes=None, limit=0):
         cur_bytes = prev_bytes + byte
 
         trace = prev_trace.copy()
-        if byte == b'{' or open_brak == True:    # Dealing with { byte
+        if byte == b'{' or open_brak == True: # Dealing with { byte
             trace.append('}')
-
         elif byte == b'}' and '}' in trace:
             if trace[-1] == '}':
                 trace.pop(-1)
             else:
                 continue
-
         elif byte == b'$' and 'a$' not in trace: # Dealing with $ byte
             trace.append('a$')
         elif byte == b'$' and 'a$' in trace:
@@ -118,12 +116,10 @@ def generate(validator, prev_bytes=None, limit=0):
             return cur_bytes
         elif rv == Status.Incomplete:
             prev_trace = trace.copy()
-
-            seen.add(byte)  # dont explore this byte again
+            seen.add(byte)  # don't explore this byte again
             prev_bytes = cur_bytes
             SEEN_AT.append(seen)
             seen = set()
-
             # reset this if it was modified by incorrect
             all_choices = MYSET_OF_BYTES
         elif rv == Status.Incorrect:

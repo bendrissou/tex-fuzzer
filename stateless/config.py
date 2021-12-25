@@ -1,5 +1,5 @@
 
-MIN_INPUT_LEN = [40, 700]
+MIN_INPUT_LEN = list(range(40, 700))
 
 MAX_INPUT_LEN = 10000
 

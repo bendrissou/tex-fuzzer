@@ -26,26 +26,26 @@ def validate_tex(input_str, min_input_len, trace):
             file_out = file_out + ' ' + line.strip()
         nout = len(Lines)
         input_len = len(input_str)
+
         if excode != 0 and excode != 256:
             print("\n++++++++++++++++ Crash or Bug found! ++++++++++++++++")
             print("Exit code: " + str(excode))
             print("String: " + input_str)
             save_crash(input_str, str(excode))
 
-        if nout == 4 and input_len>min_input_len:
-            if min_input_len != -1: # If we are not just testing
-                save_valid_input(input_str)
-            return Status.Complete,-1,""
-        elif nout == 4 and input_len<min_input_len+1:
-            return Status.Incomplete,-1, "append more"
-        elif file_out.find("Illegal unit of measure") != -1 or file_out.find("Undefined control sequence") != -1 or file_out.find("Missing character: There is no") != -1 or file_out.find("You can't use") != -1 or file_out.find("Extra }") != -1:
-            return Status.Incorrect, -1, "Incorrect"
+        if nout == 4: # Valid input
+            if input_len > min_input_len:
+                if min_input_len != -1: # -1 means we are inside a recursion and we are testing if input is incomplete. Hence don't save input.
+                    save_valid_input(input_str)
+                return Status.Complete,-1,""
+            else: return Status.Incomplete,-1,"" # Append more
+
         elif file_out.find("Missing $ inserted.") != -1:
             if 'a$' in trace:
                 input_str = close_string(input_str, trace)
                 rv, n, x = validate_tex(input_str, -1, [])
                 if rv == Status.Complete:
-                    return Status.Incomplete,-1, "append"
+                    return Status.Incomplete,-1,"" # Append more
                 else:
                     return Status.Incorrect,-1,""
             else:
@@ -56,7 +56,7 @@ def validate_tex(input_str, min_input_len, trace):
             input_str = close_string(input_str, trace)
             rv, n, x = validate_tex(input_str, -1, [])
             if rv == Status.Complete:
-                return Status.Incomplete,-1, "append"
+                return Status.Incomplete,-1,"" # Append more
             else:
                 return Status.Incorrect,-1,""
 
@@ -64,10 +64,7 @@ def validate_tex(input_str, min_input_len, trace):
             return Status.Incorrect,-1,""
 
     except Exception as e:
-        msg = str(e)
-        #print("Can't parse: " + msg)
-        n = len(msg)
-        return "wrong", n, ""
+        return Status.Incorrect,-1,""
 
 
 def close_string(curr_input, trace):
@@ -87,7 +84,7 @@ def save_valid_input(created_string):
         myfile.close()
 
 def save_crash(created_string, code):
-    with open("crashs.txt", "a") as myfile:
+    with open("crashes.txt", "a") as myfile:
         var = "Exit code: " + code + " Input: " + repr(created_string) + "\n"
         myfile.write(var)
         myfile.close()
